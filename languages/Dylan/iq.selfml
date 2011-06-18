@@ -1,0 +1,52 @@
+(detector
+    (extension dylan))
+
+(folding
+    (start `(?x)^
+(\s*+
+(define |unless|if
+|case|select
+|local method|method
+|for|while|until
+|block
+|(  "(\\.|[^"])*+"         # eat a double quoted string
+| '(\\.|[^'])*+'        # eat a single quoted string
+|   [^#"']                # eat all but comments and strings
+)*
+(                 \s   (do|begin|case)
+| [-+=&|*/~%^<>~] \s*+ (if|unless)
+)
+)\b
+(?! [^;]*+ ; .*? \bend\b )
+|(  "(\\.|[^"])*+"             # eat a double quoted string
+| '(\\.|[^'])*+'            # eat a single quoted string
+|   [^#"']                    # eat all but comments and strings
+)*
+( \{ (?!  [^}]*+ \} )
+| \[ (?! [^\]]*+ \] )
+)
+).*$
+|   [\/\/] .*? \(fold\) \s*+ $         # Sune‚Äôs special marker
+|    ^\s*\/\/\s*\#region
+`)
+    (stop [(?x)
+(   ^\s*+end.*$
+|   [\/\/] .*? \(end\) \s*+ $    # Sune’s special marker
+|   ^\s*\/\/\s*\#endregion
+)]))
+
+(shell-variables
+    (TM_COMMENT_START [// ])
+    (TM_COMMENT_START_2 /*)
+    (TM_COMMENT_END_2 */)
+    (TM_COMMENT_DISABLE_INDENT_2 yes))
+
+(comment.line [// ])
+
+(comment.block /* */)
+
+(in [comment.block.dylan, comment.line.double-slash.dylan]
+    (spellchecking))
+
+(in [source.dylan entity.name.other]
+    (symbol-list))

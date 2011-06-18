@@ -1,0 +1,8 @@
+(root source.lid
+    (zone meta.header.mail
+        (start
+            (regex [([\x{21}-\x{39}\x{3B}-\x{7E}]+)(:)\s*]
+                (1 keyword.other.mail)
+                (2 punctuation.separator.key-value.mail)))
+        (end
+            (regex [^(?![ \t\v])]))))
